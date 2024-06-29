@@ -3,6 +3,15 @@ import getImage from '@/lib/img';
 import getCountByName from '@/lib/count';
 
 const len = process.env.COUNT_LEN || '10';
+const headers = {
+    'Content-Type': 'image/svg+xml'
+};
+const errorImg = `<?xml version="1.0" encoding="UTF-8"?>
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="image-rendering: pixelated;">
+                    <title>Next.js Moe Counter</title>
+                    <text x="0" y="15" fill="red">Generate Image Error!</text>
+                </svg>`;
+
 
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
@@ -15,19 +24,13 @@ export async function GET(request: NextRequest) {
     }
     const img = await getImage(count, theme, length)
     if (img == null) {
-        return new Response(`<svg xmlns="http://www.w3.org/2000/svg" version="1.1">
-                                <text x="0" y="15" fill="red">Error!</text>
-                            </svg>`, {
+        return new Response(`${errorImg}`, {
             status: 200,
-            headers: {
-                'Content-Type': 'image/svg+xml'
-            }
+            headers: headers
         });
     }
     return new Response(`${img}`, {
         status: 200,
-        headers: {
-            'Content-Type': 'image/svg+xml'
-        }
+        headers: headers
     });
 }

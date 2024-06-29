@@ -30,7 +30,7 @@ export default async function getImage(count: number, theme='moebooru', length=1
     }
     return `<?xml version="1.0" encoding="UTF-8"?>
                 <svg width="${x}" height="${y}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="image-rendering: pixelated;">
-                    <title>Next.js Moe Count</title>
+                    <title>Next.js Moe Counter</title>
                     <g>
                     ${parts}
                     </g>
