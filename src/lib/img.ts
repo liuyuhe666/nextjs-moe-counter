@@ -1,14 +1,23 @@
 import database from "./database";
 
 const collection = database.collection('theme');
+const themeMap: Map<string, Array<any>> = new Map();
 
 export default async function getImage(count: number, theme='moebooru', length=10) {
-    const result = await collection.find({ name: theme }).toArray();
-    if (result.length === 0) {
-        return null;
+    let themeData = null;
+    if (themeMap.has(theme)) {
+        themeData = themeMap.get(theme);
+        // console.log(`${theme} from cache`);
+    } else {
+        const result = await collection.find({ name: theme }).toArray();
+        if (result.length === 0) {
+            return null;
+        }
+        const themeItem = result[0];
+        themeData = themeItem["data"];
+        themeMap.set(theme, themeData);
+        // console.log(`${theme} from db`);
     }
-    const themeItem = result[0];
-    const themeData = themeItem["data"];
     const countArray = count.toString().padStart(length, '0').split('');
     let x = 0, y = 0, parts = '';
     for (let i = 0; i < countArray.length; i++) {
