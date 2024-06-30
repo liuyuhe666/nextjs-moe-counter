@@ -12,6 +12,7 @@ async function getThemeData(theme = 'moebooru') {
 };
 const getCachedTheme = unstable_cache(
     async (name) => getThemeData(name),
+    ['nextjs-moe-counter-theme']
 );
 
 export default async function getImage(count: number, theme='moebooru', length=10) {
