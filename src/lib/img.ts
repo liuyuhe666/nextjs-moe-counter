@@ -1,22 +1,23 @@
 import database from "./database";
+import { unstable_cache } from 'next/cache';
 
 const collection = database.collection('theme');
-const themeMap: Map<string, Array<any>> = new Map();
+async function getThemeData(theme = 'moebooru') {
+    const result = await collection.find({ name: theme }).toArray();
+    if (result.length === 0) {
+        return null;
+    }
+    const themeItem = result[0];
+    return themeItem["data"];
+};
+const getCachedTheme = unstable_cache(
+    async (name) => getThemeData(name),
+);
 
 export default async function getImage(count: number, theme='moebooru', length=10) {
-    let themeData = null;
-    if (themeMap.has(theme)) {
-        themeData = themeMap.get(theme);
-        // console.log(`${theme} from cache`);
-    } else {
-        const result = await collection.find({ name: theme }).toArray();
-        if (result.length === 0) {
-            return null;
-        }
-        const themeItem = result[0];
-        themeData = themeItem["data"];
-        themeMap.set(theme, themeData);
-        // console.log(`${theme} from db`);
+    const themeData = await getCachedTheme(theme);
+    if (themeData == null) {
+        return null;
     }
     const countArray = count.toString().padStart(length, '0').split('');
     let x = 0, y = 0, parts = '';
