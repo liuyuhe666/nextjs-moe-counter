@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "init": "node -r dotenv/config ./src//scripts/init.js"
+    "init": "node -r dotenv/config ./src/scripts/init.js"
   },
   "dependencies": {
     "image-size": "^1.1.1",
